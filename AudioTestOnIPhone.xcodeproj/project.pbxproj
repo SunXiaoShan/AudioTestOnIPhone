@@ -13,6 +13,7 @@
 		8F8FFBF822C51348007BBE69 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F8FFBF722C51348007BBE69 /* Assets.xcassets */; };
 		8F8FFBFB22C51348007BBE69 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F8FFBF922C51348007BBE69 /* LaunchScreen.storyboard */; };
 		8F8FFBFE22C51348007BBE69 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8FFBFD22C51348007BBE69 /* main.m */; };
+		8FECD11522D89A09004D3FD6 /* AudioPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FECD11422D89A09004D3FD6 /* AudioPlayerManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		8F8FFBFA22C51348007BBE69 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F8FFBFC22C51348007BBE69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8F8FFBFD22C51348007BBE69 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8FECD11322D89A09004D3FD6 /* AudioPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayerManager.h; sourceTree = "<group>"; };
+		8FECD11422D89A09004D3FD6 /* AudioPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +64,8 @@
 				8F8FFBEE22C51343007BBE69 /* AppDelegate.h */,
 				8F8FFBEF22C51343007BBE69 /* AppDelegate.m */,
 				8F8FFBF122C51343007BBE69 /* ViewController.h */,
+				8FECD11322D89A09004D3FD6 /* AudioPlayerManager.h */,
+				8FECD11422D89A09004D3FD6 /* AudioPlayerManager.m */,
 				8F8FFBF222C51343007BBE69 /* ViewController.m */,
 				8F8FFBF422C51343007BBE69 /* Main.storyboard */,
 				8F8FFBF722C51348007BBE69 /* Assets.xcassets */,
@@ -142,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F8FFBF322C51343007BBE69 /* ViewController.m in Sources */,
+				8FECD11522D89A09004D3FD6 /* AudioPlayerManager.m in Sources */,
 				8F8FFBFE22C51348007BBE69 /* main.m in Sources */,
 				8F8FFBF022C51343007BBE69 /* AppDelegate.m in Sources */,
 			);

@@ -121,6 +121,7 @@ static const UInt32 maxBufferNum = 3;
 - (void)playAudioFile:(AudioFileID)audioFileID
            dataFormat:(AudioStreamBasicDescription)dataFormat {
     // Step 1: Register callback
+    // Callback function will fill buffer. Then add to buffer queue.
     OSStatus status = AudioQueueNewOutput(
                         &dataFormat,
                         BufferCallback,
@@ -196,7 +197,8 @@ static const UInt32 maxBufferNum = 3;
                       queueBuffer:(AudioQueueBufferRef)audioQueueBuffer {
     OSStatus status;
 
-    // load data
+    // Step 1: load audio data
+    // If the packetIndex is out of range, the ioNumPackets will be 0
     UInt32 ioNumBytes = outBufferSize;
     UInt32 ioNumPackets = numPacketsToRead;
     status = AudioFileReadPacketData(
@@ -208,28 +210,28 @@ static const UInt32 maxBufferNum = 3;
                             &ioNumPackets,
                             audioQueueBuffer->mAudioData
                             );
-     if (status != noErr) NSLog(@"AudioQueueSetParameter failed %d", status);
-    
-    //成功读取时
-    if (ioNumPackets > 0) {
-        //将缓冲的容量设置为与读取的音频数据一样大小(确保内存空间)
-        audioQueueBuffer->mAudioDataByteSize = ioNumBytes;
-        //完成给队列配置缓存的处理
-        status = AudioQueueEnqueueBuffer(
-                                audioQueue,
-                                audioQueueBuffer,
-                                ioNumPackets,
-                                packetDescs
-                                );
-        if (status != noErr) NSLog(@"AudioQueueEnqueueBuffer failed %d", status);
-        
-        //移动包的位置
-        packetIndex += ioNumPackets;
+    if (status != noErr) NSLog(@"AudioQueueSetParameter failed %d", status);
+
+    // Step 2: prevent load audio data failed
+    if (ioNumPackets <= 0) {
+        return;
     }
+
+    // Step 3: re-assign the data size
+    audioQueueBuffer->mAudioDataByteSize = ioNumBytes;
+
+    // Step 4: insert the buffer to system to play
+    status = AudioQueueEnqueueBuffer(
+                            audioQueue,
+                            audioQueueBuffer,
+                            ioNumPackets,
+                            packetDescs
+                            );
+    if (status != noErr) NSLog(@"AudioQueueEnqueueBuffer failed %d", status);
+
+    // Step 5: Shift to followed index
+    packetIndex += ioNumPackets;
 }
-
-
-
 
 
 #pragma mark -
