@@ -22,21 +22,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+
     self.audio1 = [AudioPlayerManager new];
     self.audio2 = [AudioPlayerManager new];
 }
 
 - (IBAction)actionAudioPlay:(id)sender {
     NSString *path1 = [NSString stringWithFormat:@"%@", [[NSBundle mainBundle] pathForResource:@"success-notification-alert_A_major" ofType:@"wav"]];
-    [self.audio1 loadAudio:path1];
-    [self.audio1 playAudio];
+    [self.audio1 playAudio:path1];
 }
 
 - (IBAction)actionAudioPlay2:(id)sender {
     NSString *path2 = [NSString stringWithFormat:@"%@", [[NSBundle mainBundle] pathForResource:@"07076051" ofType:@"wav"]];
-    [self.audio2 loadAudio:path2];
-    [self.audio2 playAudio];
+    [self.audio2 playAudio:path2];
 }
 
 @end

@@ -32,21 +32,25 @@ static const UInt32 maxBufferNum = 1;
 
 #pragma mark - Play audio
 
-- (void)loadAudio:(NSString *)audioFileName {
+- (void)playAudio:(NSString *)audioFileName {
+    // free last object
     AudioFileClose(_audioFile);
     [self freeMemory];
 
+    // open the audio file
     _audioFile = [self loadAudioFile:audioFileName];
     if (_audioFile == nil) {
         return;
     }
 
+    // parse the information fo the audio file
     NSError *error;
     _dataFormat = [self parseAudioFileData:_audioFile error:&error];
     if (error) {
         return;
     }
 
+    // parepare the buffer & play
     [self prepareAudioFile:_audioFile dataFormat:_dataFormat];
 }
 
@@ -183,7 +187,15 @@ static const UInt32 maxBufferNum = 1;
                                           &buffers[i]
                                           );
         if (status != noErr) NSLog(@"AudioQueueAllocateBuffer failed %d", status);
+
+        // Step 6.2: Fill the audio data to buffer
+        [self audioQueueOutputWithQueue:_queue
+                            queueBuffer:buffers[i]];
     }
+
+    // Step 7: Start
+    status = AudioQueueStart(_queue, nil);
+    if (status != noErr) NSLog(@"AudioQueueStart failed %d", status);
 }
 
 #pragma mark -
@@ -205,17 +217,6 @@ static const UInt32 maxBufferNum = 1;
 }
 
 #pragma mark -
-
-- (void)playAudio {
-    OSStatus status;
-    for (int i = 0; i < maxBufferNum; i++) {
-        [self audioQueueOutputWithQueue:_queue
-                            queueBuffer:buffers[i]];
-    }
-
-    status = AudioQueueStart(_queue, nil);
-    if (status != noErr) NSLog(@"AudioQueueStart failed %d", status);
-}
 
 - (void)pausAudio {
     OSStatus status = AudioQueuePause(_queue);
