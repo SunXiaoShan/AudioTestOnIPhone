@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F8AB1AF22D962CA000AF8DC /* 07076051.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F8AB1AE22D962CA000AF8DC /* 07076051.wav */; };
+		8F8AB1B122D962D0000AF8DC /* success-notification-alert_A_major.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F8AB1B022D962D0000AF8DC /* success-notification-alert_A_major.wav */; };
 		8F8FFBF022C51343007BBE69 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8FFBEF22C51343007BBE69 /* AppDelegate.m */; };
 		8F8FFBF322C51343007BBE69 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F8FFBF222C51343007BBE69 /* ViewController.m */; };
 		8F8FFBF622C51343007BBE69 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F8FFBF422C51343007BBE69 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F8AB1AE22D962CA000AF8DC /* 07076051.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 07076051.wav; sourceTree = "<group>"; };
+		8F8AB1B022D962D0000AF8DC /* success-notification-alert_A_major.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "success-notification-alert_A_major.wav"; sourceTree = "<group>"; };
 		8F8FFBEB22C51343007BBE69 /* AudioTestOnIPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioTestOnIPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F8FFBEE22C51343007BBE69 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8F8FFBEF22C51343007BBE69 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -61,17 +65,19 @@
 		8F8FFBED22C51343007BBE69 /* AudioTestOnIPhone */ = {
 			isa = PBXGroup;
 			children = (
+				8F8AB1AE22D962CA000AF8DC /* 07076051.wav */,
 				8F8FFBEE22C51343007BBE69 /* AppDelegate.h */,
 				8F8FFBEF22C51343007BBE69 /* AppDelegate.m */,
-				8F8FFBF122C51343007BBE69 /* ViewController.h */,
+				8F8FFBF722C51348007BBE69 /* Assets.xcassets */,
 				8FECD11322D89A09004D3FD6 /* AudioPlayerManager.h */,
 				8FECD11422D89A09004D3FD6 /* AudioPlayerManager.m */,
-				8F8FFBF222C51343007BBE69 /* ViewController.m */,
-				8F8FFBF422C51343007BBE69 /* Main.storyboard */,
-				8F8FFBF722C51348007BBE69 /* Assets.xcassets */,
-				8F8FFBF922C51348007BBE69 /* LaunchScreen.storyboard */,
 				8F8FFBFC22C51348007BBE69 /* Info.plist */,
+				8F8FFBF922C51348007BBE69 /* LaunchScreen.storyboard */,
 				8F8FFBFD22C51348007BBE69 /* main.m */,
+				8F8FFBF422C51343007BBE69 /* Main.storyboard */,
+				8F8AB1B022D962D0000AF8DC /* success-notification-alert_A_major.wav */,
+				8F8FFBF122C51343007BBE69 /* ViewController.h */,
+				8F8FFBF222C51343007BBE69 /* ViewController.m */,
 			);
 			path = AudioTestOnIPhone;
 			sourceTree = "<group>";
@@ -135,6 +141,8 @@
 			files = (
 				8F8FFBFB22C51348007BBE69 /* LaunchScreen.storyboard in Resources */,
 				8F8FFBF822C51348007BBE69 /* Assets.xcassets in Resources */,
+				8F8AB1B122D962D0000AF8DC /* success-notification-alert_A_major.wav in Resources */,
+				8F8AB1AF22D962CA000AF8DC /* 07076051.wav in Resources */,
 				8F8FFBF622C51343007BBE69 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

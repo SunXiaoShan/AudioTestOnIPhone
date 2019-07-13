@@ -12,7 +12,7 @@
 
 static const UInt32 maxBufferSize = 0x10000;
 static const UInt32 minBufferSize = 0x4000;
-static const UInt32 maxBufferNum = 3;
+static const UInt32 maxBufferNum = 1;
 
 @interface AudioPlayerManager() {
     AudioFileID _audioFile;
@@ -32,7 +32,10 @@ static const UInt32 maxBufferNum = 3;
 
 #pragma mark - Play audio
 
-- (void)playAudio:(NSString *)audioFileName {
+- (void)loadAudio:(NSString *)audioFileName {
+    AudioFileClose(_audioFile);
+    [self freeMemory];
+
     _audioFile = [self loadAudioFile:audioFileName];
     if (_audioFile == nil) {
         return;
@@ -44,7 +47,7 @@ static const UInt32 maxBufferNum = 3;
         return;
     }
 
-    [self playAudioFile:_audioFile dataFormat:_dataFormat];
+    [self prepareAudioFile:_audioFile dataFormat:_dataFormat];
 }
 
 #pragma mark - load data
@@ -118,11 +121,13 @@ static const UInt32 maxBufferNum = 3;
 
 #pragma mark -
 
-- (void)playAudioFile:(AudioFileID)audioFileID
+- (void)prepareAudioFile:(AudioFileID)audioFileID
            dataFormat:(AudioStreamBasicDescription)dataFormat {
+    OSStatus status;
+
     // Step 1: Register callback
     // Callback function will fill buffer. Then add to buffer queue.
-    OSStatus status = AudioQueueNewOutput(
+    status = AudioQueueNewOutput(
                         &dataFormat,
                         BufferCallback,
                         (__bridge void * _Nullable)(self),
@@ -178,20 +183,51 @@ static const UInt32 maxBufferNum = 3;
                                           &buffers[i]
                                           );
         if (status != noErr) NSLog(@"AudioQueueAllocateBuffer failed %d", status);
+    }
+}
 
-        // Step 6.2:
+#pragma mark -
+
+- (BOOL)isPlayingAudio {
+    UInt32 running;
+    UInt32 size;
+    OSStatus status = AudioQueueGetProperty(_queue, kAudioQueueProperty_IsRunning, &running, &size);
+    if (status != noErr) NSLog(@"kAudioQueueProperty_IsRunning failed %d", status);
+
+    return (running > 0);
+}
+
+#pragma mark - valume
+
+- (void)setupValume:(Float32)gain {
+    OSStatus status = AudioQueueSetParameter(_queue, kAudioQueueParam_Volume, gain);
+    if (status != noErr) NSLog(@"AudioQueueSetParameter failed %d", status);
+}
+
+#pragma mark -
+
+- (void)playAudio {
+    OSStatus status;
+    for (int i = 0; i < maxBufferNum; i++) {
         [self audioQueueOutputWithQueue:_queue
                             queueBuffer:buffers[i]];
     }
 
-    // Step 7: Set up valume
-    Float32 gain = 1.0;
-    status = AudioQueueSetParameter(_queue, kAudioQueueParam_Volume, gain);
-    if (status != noErr) NSLog(@"AudioQueueSetParameter failed %d", status);
-
-    // Step 8: Start -> callback
-    AudioQueueStart(_queue, nil);
+    status = AudioQueueStart(_queue, nil);
+    if (status != noErr) NSLog(@"AudioQueueStart failed %d", status);
 }
+
+- (void)pausAudio {
+    OSStatus status = AudioQueuePause(_queue);
+    if (status != noErr) NSLog(@"AudioQueuePause failed %d", status);
+}
+
+- (void)stopAudio {
+    OSStatus status = AudioQueueStop(_queue, true);
+    if (status != noErr) NSLog(@"AudioQueueStop failed %d", status);
+}
+
+#pragma mark -
 
 - (void)audioQueueOutputWithQueue:(AudioQueueRef)audioQueue
                       queueBuffer:(AudioQueueBufferRef)audioQueueBuffer {
@@ -220,7 +256,7 @@ static const UInt32 maxBufferNum = 3;
     // Step 3: re-assign the data size
     audioQueueBuffer->mAudioDataByteSize = ioNumBytes;
 
-    // Step 4: insert the buffer to system to play
+    // Step 4: fill the buffer to AudioQueue
     status = AudioQueueEnqueueBuffer(
                             audioQueue,
                             audioQueueBuffer,
@@ -233,6 +269,22 @@ static const UInt32 maxBufferNum = 3;
     packetIndex += ioNumPackets;
 }
 
+#pragma mark - release memory
+
+- (void)disposeAudioQueue {
+    if (_queue == nil) {
+        return;
+    }
+    OSStatus status = AudioQueueDispose(_queue, true);
+    if (status != noErr) NSLog(@"AudioQueueDispose failed %d", status);
+}
+
+- (void)freeMemory {
+    if (packetDescs) {
+        free(packetDescs);
+    }
+    packetDescs = NULL;
+}
 
 #pragma mark -
 
@@ -243,11 +295,16 @@ static const UInt32 maxBufferNum = 3;
     return status;
 }
 
+#pragma mark -
 
-#pragma mark - static function
+- (void)dealloc {
+    [self freeMemory];
+}
+
+#pragma mark - Play audio buffer complete callback
 
 static void BufferCallback(void *inUserData,AudioQueueRef inAQ,
-                           AudioQueueBufferRef buffer){
+                           AudioQueueBufferRef buffer) {
     AudioPlayerManager *manager = (__bridge AudioPlayerManager *)inUserData;
     [manager audioQueueOutputWithQueue:inAQ queueBuffer:buffer];
 }

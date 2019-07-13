@@ -12,7 +12,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AudioPlayerManager : NSObject
 
-- (void)playAudio:(NSString *)audioFileName;
+- (void)loadAudio:(NSString *)audioFileName;
+
+- (void)playAudio;
+- (void)pausAudio;
+- (void)stopAudio;
+
+- (void)setupValume:(Float32)gain;
+
+
 
 @end
 
