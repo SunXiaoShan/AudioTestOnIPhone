@@ -12,7 +12,7 @@
 
 static const UInt32 maxBufferSize = 0x10000;
 static const UInt32 minBufferSize = 0x4000;
-static const UInt32 maxBufferNum = 1;
+static const UInt32 maxBufferNum = 3;
 
 @interface AudioPlayerManager() {
     AudioFileID _audioFile;
@@ -34,8 +34,13 @@ static const UInt32 maxBufferNum = 1;
 
 - (void)playAudio:(NSString *)audioFileName {
     // free last object
-    AudioFileClose(_audioFile);
-    [self freeMemory];
+    if (_queue) {
+        AudioFileClose(_audioFile);
+        [self freeMemory];
+        AudioQueueStop(_queue, true);
+        AudioQueueDispose(_queue, true);
+        _queue = nil;
+    }
 
     // open the audio file
     _audioFile = [self loadAudioFile:audioFileName];
@@ -135,8 +140,8 @@ static const UInt32 maxBufferNum = 1;
                         &dataFormat,
                         BufferCallback,
                         (__bridge void * _Nullable)(self),
-                        nil,
-                        nil,
+                        CFRunLoopGetCurrent(), // nil
+                        kCFRunLoopCommonModes, // nil
                         0,
                         &_queue
                         );
@@ -173,7 +178,7 @@ static const UInt32 maxBufferNum = 1;
     numPacketsToRead = outBufferSize / maxPacketSize;
 
     // Step 4: Alloc AudioStreamPacketDescription buffers
-    packetDescs = (AudioStreamPacketDescription *)malloc(numPacketsToRead * sizeof (AudioStreamPacketDescription));
+    packetDescs = (AudioStreamPacketDescription *)malloc(numPacketsToRead * sizeof(AudioStreamPacketDescription));
 
     // Step 5: Reset the packet index
     packetIndex = 0;
@@ -299,7 +304,13 @@ static const UInt32 maxBufferNum = 1;
 #pragma mark -
 
 - (void)dealloc {
-    [self freeMemory];
+    if (_queue) {
+        AudioFileClose(_audioFile);
+        [self freeMemory];
+        AudioQueueStop(_queue, true);
+        AudioQueueDispose(_queue, true);
+        _queue = nil;
+    }
 }
 
 #pragma mark - Play audio buffer complete callback

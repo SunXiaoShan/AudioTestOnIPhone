@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pausAudio;
 - (void)stopAudio;
 
+- (void)ttt;
+
 - (void)setupValume:(Float32)gain;
 
 

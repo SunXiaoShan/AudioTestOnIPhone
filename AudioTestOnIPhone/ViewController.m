@@ -24,12 +24,17 @@
     // Do any additional setup after loading the view.
 
     self.audio1 = [AudioPlayerManager new];
+    NSString *path1 = [NSString stringWithFormat:@"%@", [[NSBundle mainBundle] pathForResource:@"success-notification-alert_A_major" ofType:@"wav"]];
+    [self.audio1 playAudio:path1];
+    
     self.audio2 = [AudioPlayerManager new];
 }
 
 - (IBAction)actionAudioPlay:(id)sender {
     NSString *path1 = [NSString stringWithFormat:@"%@", [[NSBundle mainBundle] pathForResource:@"success-notification-alert_A_major" ofType:@"wav"]];
     [self.audio1 playAudio:path1];
+//    [self.audio1 ttt];
+
 }
 
 - (IBAction)actionAudioPlay2:(id)sender {
